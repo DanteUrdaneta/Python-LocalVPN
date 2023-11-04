@@ -1,11 +1,14 @@
-from modules.functions import *
+from modules.functions import get_free_port, get_ip_address, connect_to_server
+from modules.functions import server_class
 from modules.security_functions import check_password
+from modules.user import user_class
 
 
 def menu():
     print("1. Create server")
     print("2. Connect to server")
-    print("3. Exit")
+    print("3. configure user")
+    print("4. Exit")
     return int(input("Enter your choice: "))
 
 
@@ -16,11 +19,22 @@ def create():
     ip = get_ip_address()
     if check_password(password):
         print(f"Created server on port {port} with IP address {ip}")
-        create_server(ip,port, password)
+        server = server_class(ip, port, password)
+        server.create_server()
         print("Server created successfully")
     else:
         print("Invalid password. Please try again.")
 
+
+def configure_user():
+    print("Please enter the username:")
+    username = input()
+    user = user_class(username)
+    if user.check_user_in_cache():
+        print("User already exists")
+    else:
+        user.save_user_in_cache()
+        print("User created successfully")
 
 def connect():
     try:
